@@ -106,11 +106,6 @@ function renderWheel() {
         const angle = (i * (360 / 26)) - 90;
         const rad = angle * (Math.PI / 180);
 
-        // Inner Letters
-        const ix = centerX + (innerRadius - 25) * Math.cos(rad);
-        const iy = centerY + (innerRadius - 25) * Math.sin(rad);
-        svgContent += `<text x="${ix}" y="${iy}" text-anchor="middle" dominant-baseline="middle" fill="var(--accent-primary)" font-family="var(--font-mono)" font-weight="bold" font-size="14">${ALPHABET[i]}</text>`;
-
         // Division lines
         const lineAngle = ((i + 0.5) * (360 / 26)) - 90;
         const lrad = lineAngle * (Math.PI / 180);
@@ -119,6 +114,12 @@ function renderWheel() {
         const lx2 = centerX + (innerRadius - 40) * Math.cos(lrad);
         const ly2 = centerY + (innerRadius - 40) * Math.sin(lrad);
         svgContent += `<line x1="${lx1}" y1="${ly1}" x2="${lx2}" y2="${ly2}" stroke="var(--border-color)" stroke-width="1" opacity="0.3" />`;
+
+        // Inner Letters
+        const ix = centerX + (innerRadius - 25) * Math.cos(rad);
+        const iy = centerY + (innerRadius - 25) * Math.sin(rad);
+        // Apply inverse rotation to text to keep it upright
+        svgContent += `<text x="${ix}" y="${iy}" text-anchor="middle" dominant-baseline="middle" fill="var(--accent-primary)" font-family="var(--font-mono)" font-weight="bold" font-size="14" transform="rotate(${-rotation}, ${ix}, ${iy})" style="transition: transform 0.3s ease-out;">${ALPHABET[i]}</text>`;
     }
 
     // Label for Inner Ring (Plaintext) - Placed at bottom
@@ -126,7 +127,7 @@ function renderWheel() {
         <defs>
             <path id="innerLabelPath" d="M ${centerX - 70},${centerY} a 70,70 0 0,0 140,0" fill="none" />
         </defs>
-        <text font-family="var(--font-body)" font-size="8" font-weight="bold" fill="var(--accent-primary)" opacity="0.4">
+        <text font-family="var(--font-body)" font-size="8" font-weight="bold" fill="var(--accent-primary)" opacity="0.4" transform="rotate(${-rotation}, ${centerX}, ${centerY})" style="transition: transform 0.3s ease-out;">
             <textPath href="#innerLabelPath" startOffset="50%" text-anchor="middle">PLAINTEXT (INNER RING)</textPath>
         </text>
     `;
